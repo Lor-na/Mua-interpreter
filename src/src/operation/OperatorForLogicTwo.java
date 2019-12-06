@@ -21,8 +21,8 @@ public abstract class OperatorForLogicTwo extends Operation {
 			// TODO raise exception for wrong number of parameters
 			return;
 		
-		MuaValue formerPara = paras.pop();
 		MuaValue latterPara = paras.pop();
+		MuaValue formerPara = paras.pop();
 		
 		// judge the type
 		if(formerPara instanceof MuaBool) {
@@ -45,5 +45,9 @@ public abstract class OperatorForLogicTwo extends Operation {
 	
 	@Override
 	public abstract void execute(Stack<MuaValue> paras, Namespace namespace);
-
+	
+	public int getParaNum() {
+		return 2;
+	}
+	
 }

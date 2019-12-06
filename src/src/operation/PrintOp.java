@@ -22,4 +22,9 @@ public class PrintOp extends Operation {
 		name.print();
 	}
 
+	@Override
+	public int getParaNum() {
+		return 1;
+	}
+
 }

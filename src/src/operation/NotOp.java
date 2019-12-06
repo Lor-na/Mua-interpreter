@@ -21,5 +21,8 @@ public class NotOp extends OperatorForLogicOne {
 		paras.push(v);
 
 	}
-
+	
+	public int getParaNum() {
+		return 1;
+	}
 }

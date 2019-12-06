@@ -20,8 +20,8 @@ public abstract class OperatorForCal extends Operation {
 			// TODO raise exception for wrong number of parameters
 			return;
 		
-		MuaValue formerPara = paras.pop();
 		MuaValue latterPara = paras.pop();
+		MuaValue formerPara = paras.pop();
 		
 		// judge the type
 		if(formerPara instanceof MuaNumber) {
@@ -45,5 +45,10 @@ public abstract class OperatorForCal extends Operation {
 
 	@Override
 	public abstract void execute(Stack<MuaValue> paras, Namespace namespace);
-
+	
+	@Override
+	public int getParaNum() {
+		return 2;
+	}
+	
 }

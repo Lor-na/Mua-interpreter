@@ -34,5 +34,8 @@ public abstract class OperatorForLogicOne extends Operation{
 
 	@Override
 	public abstract void execute(Stack<MuaValue> paras, Namespace namespace);
-
+	
+	public int getParaNum() {
+		return 1;
+	}
 }

@@ -28,4 +28,9 @@ public class EraseOp extends Operation {
 		namespace.eraseName((MuaWord)name);
 	}
 
+	@Override
+	public int getParaNum() {
+		return 1;
+	}
+
 }

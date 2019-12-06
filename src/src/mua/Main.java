@@ -6,7 +6,7 @@ public class Main {
 		
 		Parser parser = new Parser();
 		
-		while(parser.readNext()) {
+		while(true) {
 			parser.parse();
 		}
 	}

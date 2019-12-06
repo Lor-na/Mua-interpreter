@@ -17,8 +17,8 @@ public class MakeOp extends Operation {
 			// TODO raise exception for wrong number of parameters
 			return;
 		
-		MuaValue name = paras.pop();
 		MuaValue value = paras.pop();
+		MuaValue name = paras.pop();
 		
 		// judge the type
 		if(!(name instanceof MuaWord)) {
@@ -26,6 +26,11 @@ public class MakeOp extends Operation {
 		} 
 		
 		namespace.createName((MuaWord)name, value);
+	}
+
+	@Override
+	public int getParaNum() {
+		return 2;
 	}
 
 }

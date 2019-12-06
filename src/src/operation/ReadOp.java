@@ -24,4 +24,9 @@ public class ReadOp extends Operation {
 		paras.push(v);
 	}
 
+	@Override
+	public int getParaNum() {
+		return 0;
+	}
+
 }

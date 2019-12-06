@@ -27,4 +27,9 @@ public class ThingOp extends Operation {
 		paras.push(result);
 	}
 
+	@Override
+	public int getParaNum() {
+		return 1;
+	}
+
 }

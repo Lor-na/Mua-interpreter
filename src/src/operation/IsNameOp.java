@@ -30,4 +30,9 @@ public class IsNameOp extends Operation {
 		paras.push(b);
 	}
 
+	@Override
+	public int getParaNum() {
+		return 1;
+	}
+
 }

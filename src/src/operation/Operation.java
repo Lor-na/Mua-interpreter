@@ -28,6 +28,8 @@ public abstract class Operation {
 		map.put("and", new AndOp());
 		map.put("or", new OrOp());
 		map.put("not", new NotOp());
+		map.put("readlist", new ReadListOp());
+		map.put("repeat", new RepeatOp());
 	}
 	
 	public static Operation getOperation(String opName) {

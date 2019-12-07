@@ -20,6 +20,26 @@ public class MuaList extends MuaValue {
 		}
 		return;
 	}
+	
+	public String getOriginList() {
+		// res without the outside parenthesis
+		String res = "";
+		for(int i = 0; i < value.size(); i++) {
+			if(value.get(i) instanceof String)
+				res += value.get(i) + " ";
+			else
+				res += "[" + ((MuaList)value.get(i)).getOriginList() + "] ";
+		}
+		return res;
+	}
+	
+	public int size() {
+		return value.size();
+	}
+	
+	public Object get(int index) {
+		return value.get(index);
+	}
 
 	@Override
 	public void print() {

@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 
 import src.operation.Operation;
 import src.util.Util;
+import src.value.MuaList;
 import src.value.MuaNumber;
 import src.value.MuaValue;
 import src.value.MuaWord;
@@ -13,8 +14,17 @@ public class Namespace {
 
 	private static final Pattern pattern = Pattern.compile("^[A-Za-z]+[A-Za-z0-9_]*");
 	private HashMap<String, MuaValue> nameMap = new HashMap<>();
+	private MuaValue funcResult;
 	
 	public Namespace() {
+	}
+	
+	public void setResult(MuaValue output) {
+		funcResult = output;
+	}
+	
+	public MuaValue getResult() {
+		return funcResult;
 	}
 	
 	public static boolean isLegalName(String content) {
@@ -26,6 +36,13 @@ public class Namespace {
 			// TODO raise exception
 		}
 		nameMap.put(name.getValue(), value);
+	}
+	
+	public void createName(String name, MuaValue value) {
+		if(!isLegalName(name)) {
+			// TODO raise error
+		}
+		nameMap.put(name, value);
 	}
 	
 	public void eraseName(MuaWord name) {
@@ -47,9 +64,28 @@ public class Namespace {
 	
 	public MuaValue getValue(MuaWord name) {
 		if(!nameMap.containsKey(name.getValue())) {
-			// TODO not exist this key
+			return null;
 		}
 		return nameMap.get(name.getValue());
+	}
+	
+	public boolean existFunc(String name) {
+		if(!nameMap.containsKey(name))
+			return false;
+		else {
+			MuaValue func = nameMap.get(name);
+//			func.print();
+			if(func instanceof MuaList && ((MuaList) func).size() == 2)
+				return true;
+			else
+				return false;
+		}
+	}
+	
+	public MuaList getFunc(String name) {
+		// TODO: don't exist
+		MuaValue func = nameMap.get(name);
+		return (MuaList)func;
 	}
 	
 	// for debug

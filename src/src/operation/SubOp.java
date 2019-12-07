@@ -14,7 +14,7 @@ public class SubOp extends OperatorForCal {
 		super.preCalculate(paras);
 		
 		double res = super.formerOperand.getValue() - super.latterOperand.getValue();
-		
+		System.out.println(super.formerOperand.getValue());
 		MuaValue v = new MuaNumber(res);
 		paras.push(v);
 		

@@ -2,6 +2,7 @@ package src.operation;
 
 import java.util.Stack;
 
+import src.mua.Main;
 import src.name.Namespace;
 import src.value.MuaBool;
 import src.value.MuaValue;
@@ -26,7 +27,16 @@ public class IsNameOp extends Operation {
 			// TODO wrong type
 		}
 		
-		MuaValue b = new MuaBool(namespace.existName((MuaWord)name));
+		
+		MuaValue b;
+		if(namespace.existName((MuaWord)name)) {
+			b = new MuaBool(true);
+		}else if(Main.globalNameSpace.existName((MuaWord)name)) {
+			b = new MuaBool(true);
+		}else {
+			b = new MuaBool(false);
+		}
+		
 		paras.push(b);
 	}
 

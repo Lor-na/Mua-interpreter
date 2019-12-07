@@ -30,6 +30,15 @@ public abstract class Operation {
 		map.put("not", new NotOp());
 		map.put("readlist", new ReadListOp());
 		map.put("repeat", new RepeatOp());
+		map.put("output", new OutputOp());
+		map.put("stop", new StopOp());
+		map.put("export", new ExportOp());
+		map.put("if", new IfOp());
+		map.put("isnumber", new IsNumberOp());
+		map.put("isword", new IsWordOp());
+		map.put("islist", new IsListOp());
+		map.put("isbool", new IsBoolOp());
+		map.put("isempty", new IsEmptyOp());
 	}
 	
 	public static Operation getOperation(String opName) {

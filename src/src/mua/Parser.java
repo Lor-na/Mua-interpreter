@@ -14,19 +14,21 @@ import src.value.MuaWord;
 public class Parser {
 	public static Scanner sc = new Scanner(System.in);
 	public static List<String> paraList = new ArrayList<>();
-	private Stack<MuaValue> runStack;
-	private Stack<String> parseListStack;
+	private static Stack<MuaValue> runStack = new Stack<>();
+	private static Stack<String> parseListStack = new Stack<>();
 
 	public Parser() {
 		super();
-//		this.paraList = new ArrayList<>();
-		this.runStack = new Stack<>();
-		this.parseListStack = new Stack<>();
 	}
 	
-	public void parse(Namespace namespace) {
+	public static boolean parse(Namespace namespace) {
+		
+		// return false means can not get parameters, error
+		
 		// execute a single parameter
-		String para = this.getNextPara();
+		String para = getNextPara();
+		if(para == null)
+			return false;
 //		System.out.println(para.substring(0, 1));
 		// basic operation
 		if(Operation.checkOp(para)) {
@@ -68,13 +70,11 @@ public class Parser {
 			MuaValue value = MuaValue.getValue(para);
 			runStack.push(value);
 		}
-		return;
+		return true;
 	}
 	
-	private void parseFunc(Namespace funcNamespace, MuaList func) {
+	private static void parseFunc(Namespace funcNamespace, MuaList func) {
 		MuaList program = (MuaList)func.get(1);
-		
-//		funcNamespace.print();
 		
 		// clone the paraList
 		List<String> tempParaList = new ArrayList<>();
@@ -85,7 +85,10 @@ public class Parser {
 		// execute program
 		String inst = program.getOriginList();
 		String[] elements = inst.split("\\s+");
-		for(int j = elements.length - 1; j >= 0; j--) paraList.add(0, elements[j]);
+		// check empty
+		if(!inst.isEmpty()) {
+			for(int j = elements.length - 1; j >= 0; j--) paraList.add(0, elements[j]);
+		}
 		while(!paraList.isEmpty())
 			parse(funcNamespace);
 //		System.out.println("out!");
@@ -94,12 +97,12 @@ public class Parser {
 //			System.out.println(((MuaNumber)output).getValue());
 			runStack.push(output);
 		
-		for(int i = 0; i < paraList.size(); i++)
+		for(int i = 0; i < tempParaList.size(); i++)
 			paraList.add(tempParaList.get(i));
 		return;
 	}
 	
-	private MuaList parseList() {
+	private static MuaList parseList() {
 		MuaList l = new MuaList();
 		String para = parseListStack.pop();
 		while(true) {
@@ -130,6 +133,8 @@ public class Parser {
 			
 			if(parseListStack.isEmpty()) {
 				String newPara = getNextPara();
+//				if(newPara == null)
+					//TODO error for read ending
 				parseListStack.push(newPara);
 			}
 			para = parseListStack.pop();
@@ -137,11 +142,14 @@ public class Parser {
 		return l;
 	}
 
-	private String getNextPara() {
+	private static String getNextPara() {
 		// return parameter if exists, otherwise return NULL
-		String para;
+		String para = null;
+		boolean read = true;
 		while(true) {
-			if(paraList.isEmpty()) this.readNext();
+			if(paraList.isEmpty()) read = readNext();
+			if(!read) return null;
+			if(paraList.isEmpty()) continue;
 			para = paraList.get(0);
 			paraList.remove(0);
 			if(!para.isEmpty()) break;
@@ -149,11 +157,11 @@ public class Parser {
 		return para;
 	}
 	
-	private void readNext() {
+	private static boolean readNext() {
 		// read an instruction
 		if(!sc.hasNext()) {
 			// TODO: error for read nothing
-			return;
+			return false;
 		}
 		String inst = sc.nextLine();
 		
@@ -165,8 +173,11 @@ public class Parser {
 		
 		// divide into parameters
 		String[] paras = inst.split("\\s+");
-		for(int i = 0; i < paras.length; i++) paraList.add(paras[i]);
+		// check empty
+		if(!inst.isEmpty()) {
+			for(int i = 0; i < paras.length; i++) paraList.add(paras[i]);
+		}
 		
-		return;
+		return true;
 	}
 }

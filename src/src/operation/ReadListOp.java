@@ -14,9 +14,10 @@ public class ReadListOp extends Operation {
 
 	@Override
 	public void execute(Stack<MuaValue> paras, Namespace namespace) {
-		String content = null;
+		String content = "";
 		if(Parser.sc.hasNext())
 			content = Parser.sc.nextLine();
+		
 		// TODO illegal content and no content for reading
 		
 		// divide into parameters
@@ -24,9 +25,10 @@ public class ReadListOp extends Operation {
 		
 		// TODO the read src.value must be number or word
 		MuaList l = new MuaList();
-		for(int i = 0; i < elementArray.length; i++) 
-			l.add(elementArray[i]);
-		
+		if(!content.isEmpty())
+			for(int i = 0; i < elementArray.length; i++) 
+				l.add(elementArray[i]);
+			
 		paras.push((MuaValue)l);
 	}
 

@@ -8,10 +8,12 @@ public class Main {
 	
 	public static void main(String args[]) {
 		
-		Parser parser = new Parser();
+		boolean res = true;
 		
-		while(true) {
-			parser.parse(globalNameSpace);
+		while(res) {
+			res = Parser.parse(globalNameSpace);
 		}
+		
+		return;
 	}
 }

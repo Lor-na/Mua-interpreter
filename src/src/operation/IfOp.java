@@ -1,5 +1,7 @@
 package src.operation;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 import src.mua.Parser;
@@ -31,8 +33,25 @@ public class IfOp extends Operation {
 			inst = ((MuaList)list2).getOriginList();
 		}
 		
+		// clone the paraList
+		List<String> tempParaList = new ArrayList<>();
+		for(int i = 0; i < Parser.paraList.size(); i++)
+			tempParaList.add(Parser.paraList.get(i));
+		Parser.paraList.clear();
+		
+		// insert "if" sentence
 		String[] elements = inst.split("\\s+");
-		for(int j = elements.length - 1; j >= 0; j--) Parser.paraList.add(0, elements[j]);
+		if(!inst.isEmpty()) {
+			for(int j = elements.length - 1; j >= 0; j--) Parser.paraList.add(0, elements[j]);
+		}
+		
+		// execute if
+		while(!Parser.paraList.isEmpty())
+			Parser.parse(namespace);
+		
+		// give back paraList
+		for(int i = 0; i < tempParaList.size(); i++)
+			Parser.paraList.add(tempParaList.get(i));
 		
 		return;
 	}

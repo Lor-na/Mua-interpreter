@@ -28,8 +28,14 @@ public class RepeatOp extends Operation {
 //		System.out.println(inst);
 		for(int i = 0; i < n.getValue(); i++) {
 			String[] elements = inst.split("\\s+");
-			for(int j = elements.length - 1; j >= 0; j--) Parser.paraList.add(0, elements[j]);
+			if(!inst.isEmpty())
+				for(int j = elements.length - 1; j >= 0; j--) Parser.paraList.add(0, elements[j]);
 		}
+		
+		// execute repeat
+		while(!Parser.paraList.isEmpty())
+			Parser.parse(namespace);
+		
 		return;
 	}
 

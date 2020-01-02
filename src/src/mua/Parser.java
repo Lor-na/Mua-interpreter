@@ -7,7 +7,9 @@ import java.util.Stack;
 
 import src.name.Namespace;
 import src.operation.Operation;
+import src.util.Util;
 import src.value.MuaList;
+import src.value.MuaNumber;
 import src.value.MuaValue;
 import src.value.MuaWord;
 
@@ -16,6 +18,8 @@ public class Parser {
 	public static List<String> paraList = new ArrayList<>();
 	private static Stack<MuaValue> runStack = new Stack<>();
 	private static Stack<String> parseListStack = new Stack<>();
+	private static Stack<Double> operandStack = new Stack<>();
+	private static Stack<String> operatorStack = new Stack<>();
 
 	public Parser() {
 		super();
@@ -59,6 +63,9 @@ public class Parser {
 			runStack.push(value);
 			op.execute(runStack, namespace);
 		}
+		else if(para.substring(0, 1).equals("(")) {
+			parseExp(namespace, para);
+		}
 		else if(para.substring(0,1).equals("[")) {
 			parseListStack.clear();
 			parseListStack.push(para.substring(1, para.length()));
@@ -67,10 +74,172 @@ public class Parser {
 			runStack.push(list);
 		}
 		else {
-			MuaValue value = MuaValue.getValue(para);
+			
+			para = Util.addSpace(para);
+			String[] tempList = para.split(" ");
+			String firstPara = "";
+			for(int i = 0; i < tempList.length; i++) {
+				firstPara = tempList[i];
+				if(!firstPara.isEmpty()) {
+					for(int j = tempList.length - 1; j > i; j--) paraList.add(0, tempList[j]);
+					break;
+				}
+			}
+			
+			MuaValue value = MuaValue.getValue(firstPara);
 			runStack.push(value);
 		}
 		return true;
+	}
+	
+	private static void parseExp(Namespace namespace, String para) {
+		
+		// clone the operator and operand Stack
+		Stack<String> tempOperatorStack = new Stack<>();
+		for(int i = 0; i < operatorStack.size(); i++)
+			tempOperatorStack.push(operatorStack.pop());
+			
+		Stack<Double> tempOperandStack = new Stack<>();
+		for(int i = 0; i < operandStack.size(); i++)
+			tempOperandStack.push(operandStack.pop());
+		
+		// start parse
+		String operInMem = "";
+		int flag = 1;
+		
+		while(true) {
+			para = Util.addSpace(para);
+			
+			String[] expList = para.split(" ");
+			
+			for(int i = 0; i < expList.length; i++) {
+				
+				if(expList[i].isEmpty())
+					continue;
+				
+//				System.out.println(expList[i]);
+				if(Util.isExpOperator(expList[i]) != 0) {
+					// operator
+					if(expList[i].equals("-") && (operInMem.equals("(") || Util.isExpOperator(operInMem) >= 2)) {
+						flag *= -1;
+					}
+					else
+						pushExpOperator(expList[i]);
+					operInMem = expList[i];
+				}
+				else if(namespace.existFunc(expList[i])) {
+					// function
+					
+					MuaList func = namespace.getFunc(expList[i]);
+					Namespace funcNamespace = new Namespace();
+					funcNamespace.createName(expList[i], func);
+					
+					MuaList argName = (MuaList)func.get(0);
+					
+					// create parameters
+					for(int j = 0; j < argName.size(); j++) {
+						parse(namespace);
+						MuaValue v = runStack.pop();
+						funcNamespace.createName((String)argName.get(j), v);
+					}
+					
+					parseFunc(funcNamespace, func);
+					
+					MuaValue tempV = runStack.pop();
+					// if not number, then error
+					double tempNum = ((MuaNumber)tempV).getValue();
+					
+					operandStack.push(tempNum);
+					
+					operInMem = "";
+				}
+				else if(expList[i].substring(0, 1).equals(":")){
+					Operation op = Operation.getOperation("thing");
+					MuaValue value = new MuaWord(expList[i].substring(1, expList[i].length()), true);
+					runStack.push(value);
+					op.execute(runStack, namespace);
+					
+					MuaValue tempV = runStack.pop();
+					// if not number, then error
+					double tempNum = ((MuaNumber)tempV).getValue();
+					
+					operandStack.push(tempNum);
+					
+					operInMem = "";
+				}
+				else {
+					// number
+//					System.out.println(expList[i]);
+					double num = Double.valueOf(expList[i]) * flag;
+					flag = 1;
+					operandStack.push(num);
+					operInMem = "";
+				}
+			}
+			if(operatorStack.isEmpty())
+				break;
+			para = getNextPara();
+			// error for para == null
+		}
+		
+		
+		double res = operandStack.pop();
+		MuaNumber value = new MuaNumber(res);
+		runStack.push(value);
+		
+		// resume stack
+		for(int i = 0; i < tempOperatorStack.size(); i++)
+			operatorStack.push(tempOperatorStack.pop());
+	
+		for(int i = 0; i < tempOperandStack.size(); i++)
+			operandStack.push(tempOperandStack.pop());
+		
+		return;
+	}
+	
+	private static void pushExpOperator(String content) {
+		// judge priority
+		int priority = Util.isExpOperator(content);
+		
+		// if empty
+		if(operatorStack.isEmpty()) {
+			operatorStack.push(content);
+			return;
+		}
+		
+		// calculate all
+		if(content.equals(")")) {
+			while(true) {
+				String lastOper = operatorStack.pop();
+				if(lastOper.equals("(")) {
+					break;
+				}else {
+					double operand2 = operandStack.pop();
+					double operand1 = operandStack.pop();
+					double tempRes = Util.doExp(lastOper, operand1, operand2);
+					operandStack.push(tempRes);
+				}
+			}
+			return;
+		}
+		
+		// calculate temporary
+		while(true) {
+			String lastOper = operatorStack.peek();
+			int lastPriority = Util.isExpOperator(lastOper);
+			if(lastPriority > priority || lastPriority == 1) {
+				operatorStack.push(content);
+				break;
+			}else {
+				operatorStack.pop();
+				double operand2 = operandStack.pop();
+				double operand1 = operandStack.pop();
+				double tempRes = Util.doExp(lastOper, operand1, operand2);
+				operandStack.push(tempRes);
+			}
+		}
+		
+		return;
 	}
 	
 	private static void parseFunc(Namespace funcNamespace, MuaList func) {

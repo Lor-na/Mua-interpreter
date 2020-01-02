@@ -39,6 +39,8 @@ public abstract class Operation {
 		map.put("islist", new IsListOp());
 		map.put("isbool", new IsBoolOp());
 		map.put("isempty", new IsEmptyOp());
+		map.put("word", new WordOp());
+		map.put("sentence", new SentenceOp());
 	}
 	
 	public static Operation getOperation(String opName) {

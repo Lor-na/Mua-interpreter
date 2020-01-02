@@ -12,7 +12,10 @@ public class MuaList extends MuaValue {
 	}
 	
 	public void add(Object element) {
-		if(element instanceof MuaList || element instanceof String) {
+		if(element instanceof MuaList) {
+			value.add(((MuaList) element).getCopy());
+		}
+		else if(element instanceof String) {
 			value.add(element);
 		}
 		else {
@@ -51,6 +54,20 @@ public class MuaList extends MuaValue {
 				((MuaList)value.get(i)).print();
 		}
 		System.out.print("]");
+	}
+	
+	public MuaList getCopy() {
+		MuaList res = new MuaList();
+		for(int i = 0; i < value.size(); i++) {
+			if(value.get(i) instanceof MuaList) {
+				MuaList tempRes = ((MuaList)(value.get(i))).getCopy();
+				res.add(tempRes);
+			}else {
+				String tempS = (String)value.get(i);
+				res.add(tempS);
+			}
+		}
+		return res;
 	}
 
 }

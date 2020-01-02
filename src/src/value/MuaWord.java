@@ -37,6 +37,12 @@ public class MuaWord extends MuaValue {
 		return n;
 	}
 	
+	public MuaWord attach(String v) {
+		String s = value + v;
+		MuaWord res = new MuaWord(s, true);
+		return res;
+	}
+	
 	public boolean isMuaBool() {
 		return MuaBool.isType(value);
 	}

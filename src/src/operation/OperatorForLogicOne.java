@@ -15,9 +15,9 @@ public abstract class OperatorForLogicOne extends Operation{
 	}
 	
 	protected void preCalculate(Stack<MuaValue> paras) {
-		if(paras.size() < 1)
-			// TODO raise exception for wrong number of parameters
-			return;
+//		if(paras.size() < 1)
+//			// TODO raise exception for wrong number of parameters
+//			return;
 		
 		MuaValue para = paras.pop();
 		

@@ -15,11 +15,15 @@ public class IsEmptyOp extends Operation {
 
 	@Override
 	public void execute(Stack<MuaValue> paras, Namespace namespace) {
-		if(paras.size() < 1) {
-			// TODO: raise error for wrong number of parameters
-			return;
-		}
+//		if(paras.size() < 1) {
+//			// TODO: raise error for wrong number of parameters
+//			return;
+//		}
 		MuaValue para = paras.pop();
+		
+//		System.out.println("Isempty");
+//		para.print();
+		
 		boolean res;
 		if(para instanceof MuaList) {
 			res = ((MuaList)para).size() == 0;
@@ -31,6 +35,10 @@ public class IsEmptyOp extends Operation {
 			res = false;
 		}
 		MuaBool result = new MuaBool(res);
+		
+//		System.out.println("Isempty");
+//		result.print();
+		
 		paras.push(result);
 
 	}

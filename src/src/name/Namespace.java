@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 
 import src.operation.Operation;
 import src.util.Util;
+import src.value.MuaBool;
 import src.value.MuaList;
 import src.value.MuaNumber;
 import src.value.MuaValue;
@@ -17,6 +18,29 @@ public class Namespace {
 	private MuaValue funcResult;
 	
 	public Namespace() {
+	}
+	
+	public void clean() {
+		nameMap.clear();
+	}
+	
+	public String getMap(){
+		String s = "";
+		for(String key : nameMap.keySet() ) {
+			MuaValue v = nameMap.get(key);
+			s += "make \"" + key + " ";
+			if(v instanceof MuaList) {
+				s += "[" + ((MuaList) v).getOriginList() + "]";
+			} else if(v instanceof MuaWord) {
+				s += ((MuaWord) v).getValue();
+			} else if(v instanceof MuaBool) {
+				s += (((MuaBool) v).getValue()) ? "true" : "false";
+			} else {
+				s += String.valueOf(((MuaNumber)v).getValue());
+			}
+			s += "\n";
+		}
+		return s;
 	}
 	
 	public void setResult(MuaValue output) {
@@ -88,7 +112,7 @@ public class Namespace {
 		return (MuaList)func;
 	}
 	
-	// for debug
+	
 	public void print() {
 		for(String key : nameMap.keySet()) {
 			System.out.println(key);

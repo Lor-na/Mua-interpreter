@@ -16,10 +16,10 @@ public class RepeatOp extends Operation {
 
 	@Override
 	public void execute(Stack<MuaValue> paras, Namespace namespace) {
-		if(paras.size() < 2) {
-			// TODO: raise error for wrong number of parameters
-			return;
-		}
+//		if(paras.size() < 2) {
+//			// TODO: raise error for wrong number of parameters
+//			return;
+//		}
 		// TODO: not list type parameter
 		MuaList l = (MuaList)paras.pop();
 		MuaNumber n = (MuaNumber)paras.pop();

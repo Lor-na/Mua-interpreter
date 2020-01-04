@@ -41,6 +41,18 @@ public abstract class Operation {
 		map.put("isempty", new IsEmptyOp());
 		map.put("word", new WordOp());
 		map.put("sentence", new SentenceOp());
+		map.put("list", new ListOp());
+		map.put("join", new JoinOp());
+		map.put("first", new FirstOp());
+		map.put("last", new LastOp());
+		map.put("butfirst", new ButFirstOp());
+		map.put("butlast", new ButLastOp());
+		map.put("random", new RandomOp());
+		map.put("int", new IntOp());
+		map.put("sqrt", new SqrtOp());
+		map.put("load", new LoadOp());
+		map.put("save", new SaveOp());
+		map.put("erall", new ErallOp());
 	}
 	
 	public static Operation getOperation(String opName) {

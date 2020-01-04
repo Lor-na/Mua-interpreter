@@ -16,7 +16,17 @@ public class EqualOp extends OperatorForCmp {
 
 	@Override
 	public void execute(Stack<MuaValue> paras, Namespace namespace) {
-		super.preCompare(paras);
+		int flag = super.preCompare(paras);
+		
+		if(flag == -1) {
+			MuaValue v = new MuaBool("false");
+			paras.push(v);
+			return;
+		}
+		
+//		System.out.println("Equal");
+//		super.formerOperand.print();
+//		super.latterOperand.print();
 		
 		boolean res;
 		

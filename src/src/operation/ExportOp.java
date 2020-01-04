@@ -14,9 +14,9 @@ public class ExportOp extends Operation {
 
 	@Override
 	public void execute(Stack<MuaValue> paras, Namespace namespace) {
-		if(paras.size() < 1)
-			// TODO raise exception for wrong number of parameters
-			return;
+//		if(paras.size() < 1)
+//			// TODO raise exception for wrong number of parameters
+//			return;
 		
 		MuaValue name = paras.pop();
 		

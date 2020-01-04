@@ -16,10 +16,10 @@ public class IsNameOp extends Operation {
 	@Override
 	public void execute(Stack<MuaValue> paras, Namespace namespace) {
 
-		if (paras.size() < 1) {
-			// TODO wrong number of parameter
-			return;
-		}
+//		if (paras.size() < 1) {
+//			// TODO wrong number of parameter
+//			return;
+//		}
 		
 		MuaValue name = paras.pop();
 		

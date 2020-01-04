@@ -17,9 +17,9 @@ public class IfOp extends Operation {
 
 	@Override
 	public void execute(Stack<MuaValue> paras, Namespace namespace) {
-		if(paras.size() < 3)
-			// TODO raise exception for wrong number of parameters
-			return;
+//		if(paras.size() < 3)
+//			// TODO raise exception for wrong number of parameters
+//			return;
 		
 		MuaValue list2 = paras.pop();
 		MuaValue list1 = paras.pop();
@@ -31,7 +31,7 @@ public class IfOp extends Operation {
 		}
 		else {
 			inst = ((MuaList)list2).getOriginList();
-		}
+		}		
 		
 		// clone the paraList
 		List<String> tempParaList = new ArrayList<>();

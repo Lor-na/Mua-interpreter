@@ -13,9 +13,9 @@ public class MakeOp extends Operation {
 
 	@Override
 	public void execute(Stack<MuaValue> paras, Namespace namespace) {
-		if(paras.size() != 2)
-			// TODO raise exception for wrong number of parameters
-			return;
+//		if(paras.size() != 2)
+//			// TODO raise exception for wrong number of parameters
+//			return;
 		
 		MuaValue value = paras.pop();
 		MuaValue name = paras.pop();
@@ -24,6 +24,10 @@ public class MakeOp extends Operation {
 		if(!(name instanceof MuaWord)) {
 			// TODO Name must be a word
 		} 
+		
+//		System.out.println("make");
+//		name.print();
+//		value.print();
 		
 		namespace.createName((MuaWord)name, value);
 	}

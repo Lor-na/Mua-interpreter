@@ -74,19 +74,39 @@ public class Parser {
 			runStack.push(list);
 		}
 		else {
-			
-			para = Util.addSpace(para);
-			String[] tempList = para.split(" ");
-			String firstPara = "";
-			for(int i = 0; i < tempList.length; i++) {
-				firstPara = tempList[i];
-				if(!firstPara.isEmpty()) {
-					for(int j = tempList.length - 1; j > i; j--) paraList.add(0, tempList[j]);
-					break;
+			// must be a value
+			MuaValue value;
+			char start = para.charAt(0);
+			if(Character.isDigit(start)) {
+				para = Util.addSpace(para);
+				String[] tempList = para.split(" ");
+				String firstPara = "";
+				for(int i = 0; i < tempList.length; i++) {
+					firstPara = tempList[i];
+					if(!firstPara.isEmpty()) {
+						for(int j = tempList.length - 1; j > i; j--) paraList.add(0, tempList[j]);
+						break;
+					}
 				}
+				value = MuaValue.getValue(firstPara);
+			}else if(start == '-') {
+				para = para.substring(1, para.length());
+				para = Util.addSpace(para);
+				String[] tempList = para.split(" ");
+				String firstPara = "";
+				for(int i = 0; i < tempList.length; i++) {
+					firstPara = tempList[i];
+					if(!firstPara.isEmpty()) {
+						for(int j = tempList.length - 1; j > i; j--) paraList.add(0, tempList[j]);
+						break;
+					}
+				}
+				value = MuaValue.getValue("-"+firstPara);
+			}
+			else {
+				value = MuaValue.getValue(para);
 			}
 			
-			MuaValue value = MuaValue.getValue(firstPara);
 			runStack.push(value);
 		}
 		return true;
@@ -96,11 +116,14 @@ public class Parser {
 		
 		// clone the operator and operand Stack
 		Stack<String> tempOperatorStack = new Stack<>();
-		for(int i = 0; i < operatorStack.size(); i++)
+		int size = operatorStack.size();
+//		System.out.println(size);
+		for(int i = 0; i < size; i++)
 			tempOperatorStack.push(operatorStack.pop());
 			
 		Stack<Double> tempOperandStack = new Stack<>();
-		for(int i = 0; i < operandStack.size(); i++)
+		size = operandStack.size();
+		for(int i = 0; i < size; i++)
 			tempOperandStack.push(operandStack.pop());
 		
 		// start parse
@@ -112,7 +135,11 @@ public class Parser {
 			
 			String[] expList = para.split(" ");
 			
+//			System.out.println("Parse Exp");
+			
 			for(int i = 0; i < expList.length; i++) {
+				
+//				System.out.println(expList[i]);
 				
 				if(expList[i].isEmpty())
 					continue;
@@ -123,8 +150,15 @@ public class Parser {
 					if(expList[i].equals("-") && (operInMem.equals("(") || Util.isExpOperator(operInMem) >= 2)) {
 						flag *= -1;
 					}
-					else
-						pushExpOperator(expList[i]);
+					else {
+						int calRes;
+						calRes = pushExpOperator(expList[i]);
+						if(calRes == 1) {
+							for(int j = i + 1; j < expList.length; j++)
+								paraList.add(expList[j]);
+							break;
+						}
+					}
 					operInMem = expList[i];
 				}
 				else if(namespace.existFunc(expList[i])) {
@@ -188,23 +222,25 @@ public class Parser {
 		runStack.push(value);
 		
 		// resume stack
-		for(int i = 0; i < tempOperatorStack.size(); i++)
+		size = tempOperatorStack.size();
+		for(int i = 0; i < size; i++)
 			operatorStack.push(tempOperatorStack.pop());
-	
-		for(int i = 0; i < tempOperandStack.size(); i++)
+		
+		size = tempOperandStack.size();
+		for(int i = 0; i < size; i++)
 			operandStack.push(tempOperandStack.pop());
 		
 		return;
 	}
 	
-	private static void pushExpOperator(String content) {
+	private static int pushExpOperator(String content) {
 		// judge priority
 		int priority = Util.isExpOperator(content);
 		
 		// if empty
 		if(operatorStack.isEmpty()) {
 			operatorStack.push(content);
-			return;
+			return 0;
 		}
 		
 		// calculate all
@@ -220,7 +256,7 @@ public class Parser {
 					operandStack.push(tempRes);
 				}
 			}
-			return;
+			return 1;
 		}
 		
 		// calculate temporary
@@ -239,7 +275,7 @@ public class Parser {
 			}
 		}
 		
-		return;
+		return 0;
 	}
 	
 	private static void parseFunc(Namespace funcNamespace, MuaList func) {
@@ -262,9 +298,11 @@ public class Parser {
 			parse(funcNamespace);
 //		System.out.println("out!");
 		MuaValue output = funcNamespace.getResult();
-		if(output != null)
-//			System.out.println(((MuaNumber)output).getValue());
+		if(output != null) {
+//			System.out.println("Func result");
+//			output.print();
 			runStack.push(output);
+		}			
 		
 		for(int i = 0; i < tempParaList.size(); i++)
 			paraList.add(tempParaList.get(i));
@@ -279,7 +317,7 @@ public class Parser {
 //			String endChar = para.substring(para.length() - 1, para.length());
 			int frontParenthese = para.indexOf("[");
 			int endParenthese = para.indexOf("]");
-			if(frontParenthese != -1) {
+			if(frontParenthese != -1 && ((frontParenthese < endParenthese) ^ (endParenthese == -1))) {
 				if(!para.substring(0, frontParenthese).isEmpty())
 					l.add(para.substring(0,  frontParenthese));
 				String rest = para.substring(frontParenthese + 1, para.length());

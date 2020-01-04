@@ -17,10 +17,10 @@ public class SentenceOp extends Operation {
 
 	@Override
 	public void execute(Stack<MuaValue> paras, Namespace namespace) {
-		if (paras.size() < 1) {
-			// TODO wrong number of parameter
-			return;
-		}
+//		if (paras.size() < 1) {
+//			// TODO wrong number of parameter
+//			return;
+//		}
 		
 		MuaValue value2 = paras.pop();
 		MuaValue value1 = paras.pop();

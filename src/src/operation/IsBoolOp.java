@@ -13,10 +13,10 @@ public class IsBoolOp extends Operation {
 
 	@Override
 	public void execute(Stack<MuaValue> paras, Namespace namespace) {
-		if(paras.size() < 1) {
-			// TODO: raise error for wrong number of parameters
-			return;
-		}
+//		if(paras.size() < 1) {
+//			// TODO: raise error for wrong number of parameters
+//			return;
+//		}
 		MuaValue para = paras.pop();
 		boolean res;
 		res = para instanceof MuaBool;

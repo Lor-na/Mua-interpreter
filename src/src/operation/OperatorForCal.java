@@ -16,9 +16,9 @@ public abstract class OperatorForCal extends Operation {
 	}
 	
 	protected void preCalculate(Stack<MuaValue> paras) {
-		if(paras.size() < 2)
-			// TODO raise exception for wrong number of parameters
-			return;
+//		if(paras.size() < 2)
+//			// TODO raise exception for wrong number of parameters
+//			return;
 		
 		MuaValue latterPara = paras.pop();
 		MuaValue formerPara = paras.pop();

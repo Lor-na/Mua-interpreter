@@ -15,10 +15,10 @@ public abstract class OperatorForCmp extends Operation {
 	public OperatorForCmp() {
 	}
 
-	protected void preCompare(Stack<MuaValue> paras) {
-		if(paras.size() < 2)
-			// TODO raise exception for wrong number of parameters
-			return;
+	protected int preCompare(Stack<MuaValue> paras) {
+//		if(paras.size() < 2)
+//			// TODO raise exception for wrong number of parameters
+//			return -2;
 		
 		MuaValue latterPara = paras.pop();
 		MuaValue formerPara = paras.pop();
@@ -36,13 +36,15 @@ public abstract class OperatorForCmp extends Operation {
 			// one word to number
 			this.formerOperand = ((MuaWord)formerPara).getMuaNumber();
 			this.latterOperand = latterPara;
-		} else {
+		} else if(formerPara instanceof MuaNumber && latterPara instanceof MuaNumber){
 			// both number
 			this.formerOperand = formerPara;
 			this.latterOperand = latterPara;
+		} else {
+			return -1;
 		}
 		
-		
+		return 0;
 	}
 	
 	@Override

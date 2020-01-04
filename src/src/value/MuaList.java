@@ -28,8 +28,12 @@ public class MuaList extends MuaValue {
 		// res without the outside parenthesis
 		String res = "";
 		for(int i = 0; i < value.size(); i++) {
-			if(value.get(i) instanceof String)
-				res += value.get(i) + " ";
+			if(value.get(i) instanceof String) {
+				if(i == value.size() - 1)
+					res += value.get(i);
+				else
+					res += value.get(i) + " ";
+			}
 			else
 				res += "[" + ((MuaList)value.get(i)).getOriginList() + "] ";
 		}
@@ -46,14 +50,19 @@ public class MuaList extends MuaValue {
 
 	@Override
 	public void print() {
-		System.out.print("[ ");
-		for(int i = 0; i < value.size(); i++) {
-			if(value.get(i) instanceof String) 
-				System.out.print(value.get(i) + " ");
-			else
-				((MuaList)value.get(i)).print();
-		}
-		System.out.print("]");
+//		System.out.print("[ ");
+//		for(int i = 0; i < value.size(); i++) {
+//			if(value.get(i) instanceof String) 
+//				System.out.print(value.get(i) + " ");
+//			else
+//				((MuaList)value.get(i)).print();
+//		}
+//		System.out.print("]");
+		
+		String s = this.getOriginList();
+		System.out.println(s);
+		
+		
 	}
 	
 	public MuaList getCopy() {
